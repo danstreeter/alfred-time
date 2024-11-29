@@ -1,0 +1,47 @@
+name: Create Alfred Workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          set-safe-directory: /app
+
+      - name: Get version from info.plist
+        id: get_version
+        run: |
+          version=$(python -c "import os, plistlib, sys; info_plist=sys.argv[1]; sys.exit(1) if len(sys.argv) < 2 else sys.exit(2) if not os.path.exists(info_plist) else sys.exit(3) if 'version' not in plistlib.load(open(info_plist, 'rb')) else print(plistlib.load(open(info_plist, 'rb'))['version'])" ./info.plist)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      # Attempt to create the tag early to fail faster.
+      - uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: ${{ steps.get_version.outputs.version }}
+          tag_exists_error: true
+
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: "8.4.1"
+
+      - name: Build Alfred workflow
+        id: builder
+        uses: almibarss/build-alfred-workflow@v1.1
+        with:
+          workflow_dir: ./
+          exclude_patterns: 'composer* package* phpunit.xml tests* DOCKER* docker* *.log'
+          custom_version: ${{ steps.get_version.outputs.version }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.builder.outputs.workflow_file }}
+          tag_name: ${{ steps.get_version.outputs.version }}

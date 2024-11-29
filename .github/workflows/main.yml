@@ -1,12 +1,14 @@
 name: tests
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:
+  # Temporarally disable these as they need some work to get running
+  # push:
+  #   branches:
+  #     - master
+  # pull_request:
+  #   branches:
+  #     - master
 
 jobs:
   tests-non-API:

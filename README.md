@@ -1,3 +1,13 @@
+## Dan Streeter's Fork 🍴
+
+I use this workflow quite a lot so fixed it up for myself. It runs on my Mac running PHP 8.4.1.
+
+I added a GitHub action to build the Alfred Workflow - taking the version from the info.plist file which will fail by design if a tag already exists.
+
+I left everything else the same.
+
+---
+
 ⚠️⚠️⚠️ this project is archived. i don't use it myself anymore and there's too much work needed to keep it going. (API versions, PHP packages, PHP versions etc.) consider using individual service Workflows like https://github.com/jason0x43/alfred-toggl. ⚠️⚠️⚠️
 
 ___

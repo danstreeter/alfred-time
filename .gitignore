@@ -9,3 +9,5 @@ build
 .env
 
 tests/*/config.json
+
+SCRATCH
